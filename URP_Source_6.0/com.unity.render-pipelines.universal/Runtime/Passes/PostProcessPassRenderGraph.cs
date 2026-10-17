@@ -281,7 +281,8 @@ namespace UnityEngine.Rendering.Universal
                 float dirtRatio = dirtTexture.width / (float)dirtTexture.height;
                 float screenRatio = m_Descriptor.width / (float)m_Descriptor.height;
                 var dirtScaleOffset = new Vector4(1f, 1f, 0f, 0f);
-                float dirtIntensity = m_Bloom.dirtIntensity.value;
+                // Must match _DIRT variant stripping in ShaderBuildPreprocessor.
+                float dirtIntensity = m_Bloom.dirtTexture.value == null ? 0f : m_Bloom.dirtIntensity.value;
 
                 if (dirtRatio > screenRatio)
                 {
@@ -1255,7 +1256,7 @@ namespace UnityEngine.Rendering.Universal
                             Matrix4x4 nonJitteredViewProjMatrix_k = GL.GetGPUProjectionMatrix(data.cameraData.GetProjectionMatrixNoJitter(xrIdx), true) * data.cameraData.GetViewMatrix(xrIdx);
 
                             LensFlareCommonSRP.DoLensFlareDataDrivenCommon(
-                                data.material, data.cameraData.camera, data.viewport, xr, data.cameraData.xr.multipassId,
+                                data.material, data.cameraData.camera, data.viewport, xr, xrIdx,
                                 data.width, data.height,
                                 data.usePanini, data.paniniDistance, data.paniniCropToFit,
                                 true,

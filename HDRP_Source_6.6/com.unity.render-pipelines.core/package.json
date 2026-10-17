@@ -8,6 +8,5 @@
     "com.unity.collections": "2.4.3",
     "com.unity.modules.jsonserialize": "1.0.0",
     "com.unity.profiling.core": "1.0.3"
-  },
-  "_fingerprint": "2d66c71e606e5b2e1ba0611419b383fc0a7b7bec"
+  }
 }

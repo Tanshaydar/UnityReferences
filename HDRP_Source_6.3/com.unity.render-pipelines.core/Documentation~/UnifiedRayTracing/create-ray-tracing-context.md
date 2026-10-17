@@ -9,7 +9,7 @@ Follow these steps:
 ## Load the ray tracing resources
 The [`RayTracingContext`](xref:UnityEngine.Rendering.UnifiedRayTracing.RayTracingContext) needs a few utility shaders that the [`RayTracingResources`](xref:UnityEngine.Rendering.UnifiedRayTracing.RayTracingResources) object supplies. You can load these resources in several different ways.
 
-If your project uses SRP (Scriptable Render Pipeline), load the resources via [`RayTracingResources.LoadFromRenderPipelineResources`](xref:UnityEngine.Rendering.UnifiedRayTracing.RayTracingContext.LoadFromRenderPipelineResources()). This always works in the Editor.
+If your project uses SRP (Scriptable Render Pipeline), load the resources via [`RayTracingResources.LoadFromRenderPipelineResources`](xref:UnityEngine.Rendering.UnifiedRayTracing.RayTracingResources.LoadFromRenderPipelineResources()). This always works in the Editor.
 ```C#
 var rtResources = new RayTracingResources();
 bool result = rtResources.LoadFromRenderPipelineResources();
@@ -35,7 +35,20 @@ rtResources.Load();
 ```
 **Note:** Since the Player doesn't give access to the Asset Database, this method only works in the Editor.
 
-To load the [`RayTracingResources`](xref:UnityEngine.Rendering.UnifiedRayTracing.RayTracingResources) in the Player, you can also build the **unifiedraytracing** AssetBundle. For more information about how to build and load AssetBundles, refer to [AssetBundles](xref:AssetBundlesIntro).
+To load the [`RayTracingResources`](xref:UnityEngine.Rendering.UnifiedRayTracing.RayTracingResources) in the Player, you can also build an AssetBundle that includes the following SRP Core files:
+- `Runtime/UnifiedRayTracing/Common/GeometryPool/GeometryPoolKernels.compute`
+- `Runtime/UnifiedRayTracing/Common/Utilities/CopyBuffer.compute`
+- `Runtime/UnifiedRayTracing/Compute/RadeonRays/kernels/copyPositions.compute`
+- `Runtime/UnifiedRayTracing/Compute/RadeonRays/kernels/bit_histogram.compute`
+- `Runtime/UnifiedRayTracing/Compute/RadeonRays/kernels/block_reduce_part.compute`
+- `Runtime/UnifiedRayTracing/Compute/RadeonRays/kernels/block_scan.compute`
+- `Runtime/UnifiedRayTracing/Compute/RadeonRays/kernels/build_hlbvh.compute`
+- `Runtime/UnifiedRayTracing/Compute/RadeonRays/kernels/restructure_bvh.compute`
+- `Runtime/UnifiedRayTracing/Compute/RadeonRays/kernels/scatter.compute`
+
+For more information about building and loading AssetBundles, refer to [AssetBundles](xref:AssetBundlesIntro).
+
+After you build the AssetBundle, use the following code to load it:
 ```C# 
 var rtResources = new RayTracingResources();
 
@@ -49,9 +62,12 @@ rtResources.LoadFromAssetBundle(asssetBundle);
 ## Create the context
 Once the [`RayTracingResources`](xref:UnityEngine.Rendering.UnifiedRayTracing.RayTracingResources) are loaded, use them to create the [`RayTracingContext`](xref:UnityEngine.Rendering.UnifiedRayTracing.RayTracingContext).
 ```C# 
-// Choose a backend
-var backend = RayTracingContext.IsBackendSupported(RayTracingBackend.Hardware) ? RayTracingBackend.Hardware : RayTracingBackend.Compute;
+var context = new RayTracingContext(rtResources);
+```
 
-// Create the context
+By default, Unity checks if the device supports hardware ray tracing, and selects either hardware ray tracing or compute shaders. To manually select the backend, pass in a `RayTracingBackend`. For example:
+
+```C# 
+var backend = RayTracingBackend.Compute;
 var context = new RayTracingContext(backend, rtResources);
 ```

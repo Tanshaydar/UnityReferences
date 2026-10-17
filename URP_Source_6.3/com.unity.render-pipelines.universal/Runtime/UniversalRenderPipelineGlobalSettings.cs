@@ -15,7 +15,7 @@ namespace UnityEngine.Rendering.Universal
     /// Global settings are unique per Render Pipeline type. In URP, Global Settings contain:
     /// - light layer names
     /// </summary>
-    [URPHelpURL("urp-global-settings")]
+    [URPHelpURL("urp/urp-global-settings")]
     [DisplayInfo(name = "URP Global Settings Asset", order = CoreUtils.Sections.section4 + 2)]
     [SupportedOnRenderPipeline(typeof(UniversalRenderPipelineAsset))]
     [DisplayName("URP")]
@@ -153,18 +153,12 @@ namespace UnityEngine.Rendering.Universal
                 asset.m_AssetVersion = 8;
             }
 
-            // URPReflectionProbeSetings is introduced set the values for older projects.
+            // URPReflectionProbeSettings is introduced; disable rotation for older projects to preserve
+            // pre-existing behavior (rotation was not supported before this version).
             if (asset.m_AssetVersion < 9)
             {
-                if (GraphicsSettings.TryGetRenderPipelineSettings<URPReflectionProbeSettings>(out var reflectionProbeSettings))
-                {
-                    reflectionProbeSettings.UseReflectionProbeRotation = false;
-                }
-                else
-                {
-                    Debug.LogError("Failed to upgrade global settings for URPReflectionProbeSettings since it doesn't exists.");
-                }
-
+                var reflectionProbeSettings = GetOrCreateGraphicsSettings<URPReflectionProbeSettings>(asset);
+                reflectionProbeSettings.UseReflectionProbeRotation = false;
                 asset.m_AssetVersion = 9;
             }
 

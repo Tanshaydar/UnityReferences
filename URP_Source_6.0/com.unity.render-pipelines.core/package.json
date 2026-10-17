@@ -13,6 +13,5 @@
     "com.unity.modules.terrain": "1.0.0",
     "com.unity.modules.jsonserialize": "1.0.0",
     "com.unity.rendering.light-transport": "1.0.1"
-  },
-  "_fingerprint": "d7b87cecdab8849dacf59fec31d3c0d0326c187a"
+  }
 }

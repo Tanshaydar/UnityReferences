@@ -6,6 +6,5 @@
   "displayName": "High Definition Render Pipeline Config",
   "dependencies": {
     "com.unity.render-pipelines.core": "17.3.0"
-  },
-  "_fingerprint": "a5eed8fc07b1b5cc45c39f0a67682f851335ae59"
+  }
 }

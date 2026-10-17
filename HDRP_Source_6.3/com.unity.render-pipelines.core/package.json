@@ -12,6 +12,5 @@
     "com.unity.modules.physics": "1.0.0",
     "com.unity.modules.terrain": "1.0.0",
     "com.unity.modules.jsonserialize": "1.0.0"
-  },
-  "_fingerprint": "04ab0eefa0c333fd1eebb81cdd292c9409489de7"
+  }
 }

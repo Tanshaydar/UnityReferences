@@ -47,6 +47,8 @@ namespace UnityEngine.Rendering.Universal
             descriptor.depthStencilFormat = GraphicsFormat.None;
             descriptor.width = cameraWidth;
             descriptor.height = cameraHeight;
+            // we dont need multisampling, and not explicitly setting this can violate validation layers on vulkan
+            descriptor.msaaSamples = 1;
         }
 
         /// <summary>
@@ -63,6 +65,8 @@ namespace UnityEngine.Rendering.Universal
             descriptor.depthStencilFormat = depthStencilFormat;
             descriptor.width = cameraWidth;
             descriptor.height = cameraHeight;
+            // we dont need multisampling, and not explicitly setting this can violate validation layers on vulkan
+            descriptor.msaaSamples = 1;
         }
 
         private static void ExecutePass(RasterCommandBuffer commandBuffer, PassData passData, RendererList rendererList)
@@ -231,7 +235,9 @@ namespace UnityEngine.Rendering.Universal
                 builder.UseAllGlobalTextures(true);
 
                 builder.SetRenderAttachment(colorBuffer, 0);
-                builder.SetRenderAttachmentDepth(depthBuffer, AccessFlags.ReadWrite);
+
+                if (depthBuffer.IsValid())
+                    builder.SetRenderAttachmentDepth(depthBuffer, AccessFlags.ReadWrite);
 
                 passData.rendererList = renderGraph.CreateUIOverlayRendererList(cameraData.camera, UISubset.UIToolkit_UGUI);
                 builder.UseRendererList(passData.rendererList);
